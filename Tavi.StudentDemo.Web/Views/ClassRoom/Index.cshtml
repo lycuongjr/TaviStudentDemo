@@ -1,0 +1,259 @@
+﻿@model IPagedList<ClassRoom>
+@using PagedList;
+@using PagedList.Mvc;
+@using MvcContrib.UI.Grid;
+@using Tavi.StudentDemo.Models;
+@using Tavi.StudentDemo.HtmlEx;
+@{
+    ViewBag.Title = "Danh sách sinh viên";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section header{
+    Danh sách lớp học
+}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- /.card -->
+                <div class="card">
+                    <div class="card-header" id="formview">
+                        <div>
+                            @using (Html.BeginForm())
+                            {
+                                @Html.Hidden("Page")
+                                <div class="form-group">
+                                    <div class="form-search">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                @Html.TextBox("ClassName", ViewBag.StudentCode as String, new { @class = "form-control", @placeholder = "Nhập tên lớp" })
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.Button("Tìm kiếm", "btn btn-primary", "btnTimKiem", "fa fa-search-plus")
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-button">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary" onclick="ShowDialog()">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                            Thêm mới
+                                        </button>
+                                        <!-- Modal -->
+                                        <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Thông tin lớp học</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true"></span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body" id="ddlForm">
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @Html.Button("Xóa", "btn btn-danger", "btnDel", "fa fa-trash-o")
+                                    </div>
+                                    <div class="form-button">
+                                        <div class="modal fade bd-example-modal-lg" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Chi tiết lớp học</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body" id="ddlForm">
+
+                                                    </div>
+                                                    <div class="modal-body" id="ddlDetail">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="ddlLoadLitst">
+
+                                </div>
+                                <button type="button" class="btn btn-success" id="btnQuaylai">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                    Quay lại
+                                </button>
+
+                            }
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+<div id="ddlForm">
+
+</div>
+@section jsFooter{
+    <script language="javascript" type="text/javascript">
+       
+        function ShowDialog(id) {
+            $("#exampleModal").modal("show");
+            LoadAdd(id);
+        }
+        function ShowDialog2(id) {
+            $("#exampleModal2").modal("show");
+            LoadDetail(id);
+        }
+        $(document).keypress(function (e) {
+            if (e.which == 13) {
+                var ClassName = $("#ClassName").val();
+                loadList(ClassName);
+            }
+        });
+            function loadList(ClassName) {
+            $.ajax({
+                url: '@Url.Action("LoadListClassRoom")',
+                data: {
+                    ClassName: ClassName
+                },
+                type: "GET",
+                dataType: "html",
+                success: function (data) {
+                    $('#ddlLoadLitst').html(data);
+                },
+                error: function () {
+                    console.log("Error");
+                },
+                complete: function (data) {
+
+                }
+            });
+            }
+        function LoadDetail(id) {
+            $.ajax({
+            url: '@Url.Action("LoadDetail")',
+            data: {
+                id: id
+            },
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+                $("#ddlDetail").html(data);
+            },
+            error: function () {
+
+            },
+            complete: function (data) {
+
+            }
+                 });
+        }
+            function LoadAdd(Id, ClassName, Description, ListDepartmentID, Status ) {
+            $.ajax({
+            url: '@Url.Action("LoadForm")',
+            data: {
+                id: Id,
+                ClassName: ClassName,
+                Description: Description,
+                ListDepartmentID: ListDepartmentID,
+                Status: Status
+            },
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+                $("#ddlForm").html(data);
+            },
+            error: function () {
+
+            },
+            complete: function (data) {
+
+            }
+                 });
+        }
+
+        loadList();
+    $(document).ready(function () {
+        $('#btnTimKiem').click(function () {
+            var ClassName = $("#ClassName").val();
+            loadList(ClassName);
+        });
+          $('#btnDel').click(function () {
+            var checked = $("input:checked[name='cbxItem']");
+            if (checked.length > 0) {
+                var ids = $("input:checked").map(function () {
+                    return $(this).val();
+                }).get();
+
+                //$("#formview form").attr('action', '@Url.Action("Delete")');
+                if (confirm("Nếu xóa trường này, bạn sẽ không thể khôi phục lại! Vẫn xóa!")) {
+                    delteteClassRoom(ids);
+                }
+            } else {
+                alert("Bạn phải chọn sinh viên cần xóa");
+            }
+
+        });
+        function delteteClassRoom(cbxItem) {
+            $.ajax({
+                url: '/Department/Delete',
+                data: {
+                    cbxItem: cbxItem
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status == true) {
+                        alert("Xóa sinh viên thành công " + " " + response.data[0]);
+                        loadList();
+                    } else {
+                        alert("Xóa thất bại");
+                    }
+
+                },
+                error: function () {
+
+                }
+            })
+        };
+        $('#Create').click(function () {
+            window.location = '@Url.Action("Add")';
+        });
+         $('#btnAdd').click(function () {
+            window.location = '@Url.Action("Add")';
+         });
+         $('#btnDelete').click(function () {
+           window.location = '@Url.Action("Recycle")';
+         });
+         $('#btnQuaylai').click(function () {
+                window.location = '@Url.Action("Index")';
+            })
+
+    });
+    </script>
+}
+
+
+
+
+
+

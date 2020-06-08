@@ -1,0 +1,51 @@
+﻿@model PagedList.IPagedList<Student>
+@using PagedList.Mvc;
+@using MvcContrib.UI.Grid;
+@using Tavi.StudentDemo.Models;
+@using Tavi.StudentDemo.HtmlEx
+<style>
+    .centerBlock {
+        display: table;
+        margin: auto;
+    }
+</style>
+<div class="card-body">
+    <div class="table table-bordered table-striped">
+        @Html.Grid(Model).Columns(column =>
+   {
+
+       column.For(m => Html.htmlCheckBox("cbxItem", m.StudentID)).Named(Html.htmlCheckBox("cbxList").ToString()).Attributes(style => "width:5%");
+       column.For(m => Html.Raw("<div class='btn-group'>"
+          + "<a type='button' onclick='ShowDialog2(" + m.StudentID + ")'>"+m.StudentCode+"</a>"+ "</div>")).Named("Mã sinh viên");
+       column.For(m => m.FullName).Named("FullName").Attributes(style => "width:30%");
+       column.For(m => m.Department.DepartmentName).Named("Khoa học").Attributes(style => "width:30%");
+       column.For(m => m.Status == true ? "Còn sử dụng" : "Không sử dụng").Named("Trạng thái").Attributes(style => "width:20%");
+       column.For(m => Html.Raw("<div class='btn-group'>" + "<button type='button' class='btn btn-default btn-sm', name = '" + m.StudentID + "', id = 'btnDelete'><i class='far fa-trash-alt'></i></button>"
+           + "<button type='button' class='btn btn-default btn-sm' onclick='ShowDialog(" + m.StudentID + ")'><i class='far fa-edit'></i></button>"
+           + "</div>")).Named("Chức năng").Attributes(style => "width:20%");
+   }).Empty("Chưa có dữ liệu sinh viên")
+    </div>
+</div>
+<div class="form-group centerBlock">
+    @Html.PagedListPager(Model, PageCurrent => "javascript:ListStudent(null,null,null," + PageCurrent + ")", PagedListRenderOptions.PageNumbersOnly)
+</div>
+
+@*@Html.Grid(Model).Columns(column =>
+     {
+
+         column.For(m => Html.htmlCheckBox("cbxItem", m.StudentID)).Named(Html.htmlCheckBox("cbxList").ToString()).Attributes(style => "width:5%");
+         column.For(m => Html.ActionLink(m.StudentCode, "Add", new { id = m.StudentID })).Named("Mã sinh viên").Attributes(style => "width:10%");
+         column.For(m => m.FullName).Named("FullName").Attributes(style => "width:30%");
+         column.For(m => m.Department.DepartmentName).Named("Khoa học").Attributes(style => "width:30%");
+         column.For(m => m.Status == true ? "Còn sử dụng" : "Không sử dụng").Named("Trạng thái").Attributes(style => "width:20%");
+         column.For(m => Html.Raw("<div class='btn-group'>" + "<button type='button' class='btn btn-default btn-sm', name = '" + m.StudentID + "', id = 'btnDelete'><i class='far fa-trash-alt'></i></button>"
+             + "<button type='button' class='btn btn-default btn-sm' onclick='ShowDialog(" + m.StudentID + ")'><i class='far fa-edit'></i></button>"
+             + "</div>")
+    ).Named("Trạng thái").Attributes(style => "width:20%");
+     }).Empty("Chưa có dữ liệu sinh viên")
+        </div>
+    </div>
+    @Html.ActionLink("Last Name", "Test", new { sortOrder = ViewBag.NameSortParm })
+    <div class="form-group centerBlock">*@
+@*@Html.PagedListPager(Model, PageCurrent => "javascript:ListStudent(null,null,null," + PageCurrent + ")", PagedListRenderOptions.PageNumbersOnly)*@
+

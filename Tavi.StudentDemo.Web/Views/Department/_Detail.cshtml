@@ -1,0 +1,28 @@
+﻿@model Tavi.StudentDemo.Models.Department
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary card-outline">
+                    <div class="card-body box-profile">                        
+                        <ul class="list-group list-group-unbordered mb-3">
+                            <li class="list-group-item">
+                                <b>Tên khoa</b> <a class="float-right">@Model.DepartmentName</a>
+                            </li>                           
+                            <li class="list-group-item">
+                                <b>Ghi chú</b> <a class="float-right">@Model.Description</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Trạng thái</b> <a class="float-right">@(Model.Status == true ? ("Kích hoạt") : "Tạm khóa")</a>
+                            </li>
+                        </ul>
+
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
